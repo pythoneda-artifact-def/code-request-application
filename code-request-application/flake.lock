@@ -143,17 +143,17 @@
       },
       "locked": {
         "dir": "code-request-infrastructure",
-        "lastModified": 1695463032,
-        "narHash": "sha256-T8mkB57KUQbcqfPJ4xHF5YBcwggTL3nB/k3HC3FtW58=",
+        "lastModified": 1695463298,
+        "narHash": "sha256-JGXwvurFqJM/ihibS537zONWKsPUlaTRYixBIGmqPBo=",
         "owner": "pythoneda-artifact",
         "repo": "code-request-infrastructure-artifact",
-        "rev": "d0c4d6226f0bc5b0e0b6720d910f071c1d1ae335",
+        "rev": "68869c7ef1776ba8e72b2272d633087514f18ff2",
         "type": "github"
       },
       "original": {
         "dir": "code-request-infrastructure",
         "owner": "pythoneda-artifact",
-        "ref": "0.0.1a4",
+        "ref": "0.0.1a5",
         "repo": "code-request-infrastructure-artifact",
         "type": "github"
       }

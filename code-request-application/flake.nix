@@ -33,7 +33,7 @@
     nixos.url = "github:NixOS/nixpkgs/nixos-23.05";
     pythoneda-artifact-code-request-infrastructure = {
       url =
-        "github:pythoneda-artifact/code-request-infrastructure-artifact/0.0.1a4?dir=code-request-infrastructure";
+        "github:pythoneda-artifact/code-request-infrastructure-artifact/0.0.1a5?dir=code-request-infrastructure";
       inputs.dbus-next.follows = "dbus-next";
       inputs.flake-utils.follows = "flake-utils";
       inputs.grpcio.follows = "grpcio";
@@ -243,8 +243,8 @@
       let
         org = "pythoneda-artifact";
         repo = "code-request-application";
-        version = "0.0.1a3";
-        sha256 = "sha256-B1zVbr2EvfitpRQUPjQJDPlfjapreAoVgdSQa9q6R1s=";
+        version = "0.0.1a4";
+        sha256 = "sha256-7XUnxvLiZLRpHntqciwnZOpgfIFAlJ4CuTRAgtEQnmw=";
         pname = "${org}-${repo}";
         pythonpackage = "pythoneda.artifact.code_request.application";
         package = builtins.replaceStrings [ "." ] [ "/" ] pythonpackage;
