@@ -19,13 +19,25 @@
 {
   description = "Application layer for code requests";
   inputs = rec {
-    nixos.url = "github:NixOS/nixpkgs/nixos-23.05";
-    flake-utils.url = "github:numtide/flake-utils/v1.0.0";
-    pythoneda-artifact-code-request-infrastructure = {
-      url =
-        "github:pythoneda-artifact/code-request-infrastructure-artifact/0.0.1a2?dir=code-request-infrastructure";
+    dbus-next = {
+      url = "github:rydnr/nix-flakes/dbus-next-0.2.3?dir=dbus-next";
       inputs.nixos.follows = "nixos";
       inputs.flake-utils.follows = "flake-utils";
+    };
+    flake-utils.url = "github:numtide/flake-utils/v1.0.0";
+    grpcio = {
+      url = "github:rydnr/nix-flakes/grpcio-1.54.2?dir=grpcio";
+      inputs.nixos.follows = "nixos";
+      inputs.flake-utils.follows = "flake-utils";
+    };
+    nixos.url = "github:NixOS/nixpkgs/nixos-23.05";
+    pythoneda-artifact-code-request-infrastructure = {
+      url =
+        "github:pythoneda-artifact/code-request-infrastructure-artifact/0.0.1a4?dir=code-request-infrastructure";
+      inputs.dbus-next.follows = "dbus-next";
+      inputs.flake-utils.follows = "flake-utils";
+      inputs.grpcio.follows = "grpcio";
+      inputs.nixos.follows = "nixos";
       inputs.pythoneda-shared-artifact-changes-events.follows =
         "pythoneda-shared-artifact-changes-events";
       inputs.pythoneda-shared-artifact-changes-events-infrastructure.follows =
@@ -38,12 +50,20 @@
         "pythoneda-shared-code-requests-events-infrastructure";
       inputs.pythoneda-shared-code-requests-shared.follows =
         "pythoneda-shared-code-requests-shared";
+      inputs.pythoneda-shared-code-requests-jupyterlab.follows =
+        "pythoneda-shared-code-requests-jupyterlab";
+      inputs.pythoneda-shared-git-shared.follows =
+        "pythoneda-shared-git-shared";
+      inputs.pythoneda-shared-nix-flake-shared.follows =
+        "pythoneda-shared-nix-flake-shared";
       inputs.pythoneda-shared-pythoneda-banner.follows =
         "pythoneda-shared-pythoneda-banner";
       inputs.pythoneda-shared-pythoneda-domain.follows =
         "pythoneda-shared-pythoneda-domain";
       inputs.pythoneda-shared-pythoneda-infrastructure.follows =
         "pythoneda-shared-pythoneda-infrastructure";
+      inputs.requests.follows = "requests";
+      inputs.stringtemplate3.follows = "stringtemplate3";
     };
     pythoneda-shared-artifact-changes-events = {
       url =
@@ -206,6 +226,11 @@
       inputs.pythoneda-shared-pythoneda-domain.follows =
         "pythoneda-shared-pythoneda-domain";
     };
+    requests = {
+      url = "github:rydnr/nix-flakes/requests-2.29.0?dir=requests";
+      inputs.nixos.follows = "nixos";
+      inputs.flake-utils.follows = "flake-utils";
+    };
     stringtemplate3 = {
       url = "github:rydnr/nix-flakes/stringtemplate3-3.1?dir=stringtemplate3";
       inputs.nixos.follows = "nixos";
@@ -238,8 +263,8 @@
           builtins.replaceStrings [ "\n" ] [ "" ] "nixos-${nixosVersion}";
         shared = import "${pythoneda-shared-pythoneda-banner}/nix/shared.nix";
         pkgs = import nixos { inherit system; };
-        pythoneda-artifact-code-request-application-for = { python
-          , pythoneda-artifact-code-request-infrastructure
+        pythoneda-artifact-code-request-application-for = { dbus-next, grpcio
+          , python, pythoneda-artifact-code-request-infrastructure
           , pythoneda-shared-artifact-changes-events
           , pythoneda-shared-artifact-changes-events-infrastructure
           , pythoneda-shared-artifact-changes-shared
@@ -250,7 +275,8 @@
           , pythoneda-shared-nix-flake-shared
           , pythoneda-shared-pythoneda-application
           , pythoneda-shared-pythoneda-banner, pythoneda-shared-pythoneda-domain
-          , pythoneda-shared-pythoneda-infrastructure, stringtemplate3 }:
+          , pythoneda-shared-pythoneda-infrastructure, requests, stringtemplate3
+          }:
           let
             pnameWithUnderscores =
               builtins.replaceStrings [ "-" ] [ "_" ] pname;
@@ -269,7 +295,9 @@
             pyprojectTemplate = pkgs.substituteAll {
               authors = builtins.concatStringsSep ","
                 (map (item: ''"${item}"'') maintainers);
+              dbusNext = dbus-next.version;
               desc = description;
+              grpcio = grpcio.version;
               inherit homepage pname pythonMajorMinorVersion pythonpackage
                 version;
               package = builtins.replaceStrings [ "." ] [ "/" ] pythonpackage;
@@ -300,6 +328,7 @@
                 pythoneda-shared-pythoneda-domain.version;
               pythonedaSharedPythonedaInfrastructure =
                 pythoneda-shared-pythoneda-infrastructure.version;
+              requests = requests.version;
               src = pyprojectTemplateFile;
               stringtemplate3 = stringtemplate3.version;
             };
@@ -327,6 +356,8 @@
 
             nativeBuildInputs = with python.pkgs; [ pip pkgs.jq poetry-core ];
             propagatedBuildInputs = with python.pkgs; [
+              dbus-next
+              grpcio
               pythoneda-artifact-code-request-infrastructure
               pythoneda-shared-artifact-changes-events
               pythoneda-shared-artifact-changes-events-infrastructure
@@ -341,6 +372,7 @@
               pythoneda-shared-pythoneda-banner
               pythoneda-shared-pythoneda-domain
               pythoneda-shared-pythoneda-infrastructure
+              requests
               stringtemplate3
             ];
 
@@ -510,6 +542,8 @@
             pythoneda-artifact-code-request-application-python311;
           pythoneda-artifact-code-request-application-python38 =
             pythoneda-artifact-code-request-application-for {
+              dbus-next = dbus-next.packages.${system}.dbus-next-python38;
+              grpcio = grpcio.packages.${system}.grpcio-python38;
               python = pkgs.python38;
               pythoneda-artifact-code-request-infrastructure =
                 pythoneda-artifact-code-request-infrastructure.packages.${system}.pythoneda-artifact-code-request-infrastructure-python38;
@@ -539,11 +573,14 @@
                 pythoneda-shared-pythoneda-domain.packages.${system}.pythoneda-shared-pythoneda-domain-python38;
               pythoneda-shared-pythoneda-infrastructure =
                 pythoneda-shared-pythoneda-infrastructure.packages.${system}.pythoneda-shared-pythoneda-infrastructure-python38;
+              requests = requests.packages.${system}.requests-python38;
               stringtemplate3 =
                 stringtemplate3.packages.${system}.stringtemplate3-python38;
             };
           pythoneda-artifact-code-request-application-python39 =
             pythoneda-artifact-code-request-application-for {
+              dbus-next = dbus-next.packages.${system}.dbus-next-python39;
+              grpcio = grpcio.packages.${system}.grpcio-python39;
               python = pkgs.python39;
               pythoneda-artifact-code-request-infrastructure =
                 pythoneda-artifact-code-request-infrastructure.packages.${system}.pythoneda-artifact-code-request-infrastructure-python39;
@@ -573,11 +610,14 @@
                 pythoneda-shared-pythoneda-domain.packages.${system}.pythoneda-shared-pythoneda-domain-python39;
               pythoneda-shared-pythoneda-infrastructure =
                 pythoneda-shared-pythoneda-infrastructure.packages.${system}.pythoneda-shared-pythoneda-infrastructure-python39;
+              requests = requests.packages.${system}.requests-python39;
               stringtemplate3 =
                 stringtemplate3.packages.${system}.stringtemplate3-python39;
             };
           pythoneda-artifact-code-request-application-python310 =
             pythoneda-artifact-code-request-application-for {
+              dbus-next = dbus-next.packages.${system}.dbus-next-python310;
+              grpcio = grpcio.packages.${system}.grpcio-python310;
               python = pkgs.python310;
               pythoneda-artifact-code-request-infrastructure =
                 pythoneda-artifact-code-request-infrastructure.packages.${system}.pythoneda-artifact-code-request-infrastructure-python310;
@@ -607,11 +647,14 @@
                 pythoneda-shared-pythoneda-domain.packages.${system}.pythoneda-shared-pythoneda-domain-python310;
               pythoneda-shared-pythoneda-infrastructure =
                 pythoneda-shared-pythoneda-infrastructure.packages.${system}.pythoneda-shared-pythoneda-infrastructure-python310;
+              requests = requests.packages.${system}.requests-python310;
               stringtemplate3 =
                 stringtemplate3.packages.${system}.stringtemplate3-python310;
             };
           pythoneda-artifact-code-request-application-python311 =
             pythoneda-artifact-code-request-application-for {
+              dbus-next = dbus-next.packages.${system}.dbus-next-python311;
+              grpcio = grpcio.packages.${system}.grpcio-python311;
               python = pkgs.python311;
               pythoneda-artifact-code-request-infrastructure =
                 pythoneda-artifact-code-request-infrastructure.packages.${system}.pythoneda-artifact-code-request-infrastructure-python311;
@@ -641,6 +684,7 @@
                 pythoneda-shared-pythoneda-domain.packages.${system}.pythoneda-shared-pythoneda-domain-python311;
               pythoneda-shared-pythoneda-infrastructure =
                 pythoneda-shared-pythoneda-infrastructure.packages.${system}.pythoneda-shared-pythoneda-infrastructure-python311;
+              requests = requests.packages.${system}.requests-python311;
               stringtemplate3 =
                 stringtemplate3.packages.${system}.stringtemplate3-python311;
             };
