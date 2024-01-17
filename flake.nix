@@ -26,25 +26,25 @@
       inputs.nixos.follows = "nixos";
       inputs.pythoneda-shared-banner.follows = "pythoneda-shared-banner";
       inputs.pythoneda-shared-domain.follows = "pythoneda-shared-domain";
-      url = "github:pythoneda-artifact-def/code-request-infrastructure/0.0.17";
+      url = "github:pythoneda-artifact-def/code-request-infrastructure/0.0.18";
     };
     pythoneda-shared-application = {
       inputs.flake-utils.follows = "flake-utils";
       inputs.nixos.follows = "nixos";
       inputs.pythoneda-shared-banner.follows = "pythoneda-shared-banner";
       inputs.pythoneda-shared-domain.follows = "pythoneda-shared-domain";
-      url = "github:pythoneda-shared-def/application/0.0.40";
+      url = "github:pythoneda-shared-def/application/0.0.42";
     };
     pythoneda-shared-banner = {
       inputs.flake-utils.follows = "flake-utils";
       inputs.nixos.follows = "nixos";
-      url = "github:pythoneda-shared-def/banner/0.0.43";
+      url = "github:pythoneda-shared-def/banner/0.0.46";
     };
     pythoneda-shared-domain = {
       inputs.flake-utils.follows = "flake-utils";
       inputs.nixos.follows = "nixos";
       inputs.pythoneda-shared-banner.follows = "pythoneda-shared-banner";
-      url = "github:pythoneda-shared-def/domain/0.0.25";
+      url = "github:pythoneda-shared-def/domain/0.0.26";
     };
   };
   outputs = inputs:
@@ -53,8 +53,8 @@
       let
         org = "pythoneda-artifact";
         repo = "code-request-application";
-        version = "0.0.6";
-        sha256 = "1hway74sxs63qh3wqqyxzmmsz3drdccn65v406pbhl67a5c1hi8c";
+        version = "0.0.7";
+        sha256 = "17s8zxfqs7qiga4h35d843gg5nk1ipdff4175fxy7nycpprnfrzr";
         pname = "${org}-${repo}";
         pythonpackage = "pythoneda.artifact.code_request.application";
         package = builtins.replaceStrings [ "." ] [ "/" ] pythonpackage;
