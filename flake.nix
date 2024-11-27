@@ -28,7 +28,7 @@
         "pythoneda-shared-pythonlang-banner";
       inputs.pythoneda-shared-pythonlang-domain.follows =
         "pythoneda-shared-pythonlang-domain";
-      url = "github:pythoneda-artifact-def/code-request-infrastructure/0.0.42";
+      url = "github:pythoneda-artifact-def/code-request-infrastructure/0.0.44";
     };
     pythoneda-shared-pythonlang-application = {
       inputs.flake-utils.follows = "flake-utils";
@@ -49,7 +49,7 @@
       inputs.nixos.follows = "nixos";
       inputs.pythoneda-shared-pythonlang-banner.follows =
         "pythoneda-shared-pythonlang-banner";
-      url = "github:pythoneda-shared-pythonlang-def/domain/0.0.86";
+      url = "github:pythoneda-shared-pythonlang-def/domain/0.0.87";
     };
   };
   outputs = inputs:
@@ -58,8 +58,8 @@
       let
         org = "pythoneda-artifact";
         repo = "code-request-application";
-        version = "0.0.7";
-        sha256 = "17s8zxfqs7qiga4h35d843gg5nk1ipdff4175fxy7nycpprnfrzr";
+        version = "0.0.8";
+        sha256 = "038n9wbyygnzwbyflmhay3n19ziwhj95wmvafnwn7vyn871ms74i";
         pname = "${org}-${repo}";
         pythonpackage = "pythoneda.artifact.code_request.application";
         package = builtins.replaceStrings [ "." ] [ "/" ] pythonpackage;
