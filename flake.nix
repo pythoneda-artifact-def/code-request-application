@@ -17,7 +17,7 @@
 # You should have received a copy of the GNU General Public License
 # along with this program.  If not, see <https://www.gnu.org/licenses/>.
 {
-  description = "Application layer for the 'code request' artifact";
+  description = "Nix flake for pythoneda-artifact/code-request-application";
   inputs = rec {
     flake-utils.url = "github:numtide/flake-utils/v1.0.0";
     nixos.url = "github:NixOS/nixpkgs/24.05";
@@ -195,15 +195,7 @@
           };
       in rec {
         apps = rec {
-          default = pythoneda-artifact-code-request-application-default;
-          pythoneda-artifact-code-request-application-default =
-            pythoneda-artifact-code-request-application-python312;
-          pythoneda-artifact-code-request-application-python38 =
-            shared.app-for {
-              package =
-                self.packages.${system}.pythoneda-artifact-code-request-application-python38;
-              inherit entrypoint;
-            };
+          default = pythoneda-artifact-code-request-application-python312;
           pythoneda-artifact-code-request-application-python39 =
             shared.app-for {
               package =
@@ -228,29 +220,17 @@
                 self.packages.${system}.pythoneda-artifact-code-request-application-python312;
               inherit entrypoint;
             };
+          pythoneda-artifact-code-request-application-python313 =
+            shared.app-for {
+              package =
+                self.packages.${system}.pythoneda-artifact-code-request-application-python313;
+              inherit entrypoint;
+            };
         };
         defaultApp = apps.default;
         defaultPackage = packages.default;
         devShells = rec {
-          default = pythoneda-artifact-code-request-application-default;
-          pythoneda-artifact-code-request-application-default =
-            pythoneda-artifact-code-request-application-python312;
-          pythoneda-artifact-code-request-application-python38 =
-            shared.devShell-for {
-              banner = "${
-                  pythoneda-shared-pythonlang-banner.packages.${system}.pythoneda-shared-pythonlang-banner-python38
-                }/bin/banner.sh";
-              extra-namespaces = "";
-              nixpkgs-release = nixpkgsRelease;
-              package =
-                packages.pythoneda-artifact-code-request-application-python38;
-              python = pkgs.python38;
-              pythoneda-shared-pythonlang-banner =
-                pythoneda-shared-pythonlang-banner.packages.${system}.pythoneda-shared-pythonlang-banner-python38;
-              pythoneda-shared-pythonlang-domain =
-                pythoneda-shared-pythonlang-domain.packages.${system}.pythoneda-shared-pythonlang-domain-python38;
-              inherit archRole layer org pkgs repo space;
-            };
+          default = pythoneda-artifact-code-request-application-python312;
           pythoneda-artifact-code-request-application-python39 =
             shared.devShell-for {
               banner = "${
@@ -315,23 +295,25 @@
                 pythoneda-shared-pythonlang-domain.packages.${system}.pythoneda-shared-pythonlang-domain-python312;
               inherit archRole layer org pkgs repo space;
             };
+          pythoneda-artifact-code-request-application-python313 =
+            shared.devShell-for {
+              banner = "${
+                  pythoneda-shared-pythonlang-banner.packages.${system}.pythoneda-shared-pythonlang-banner-python313
+                }/bin/banner.sh";
+              extra-namespaces = "";
+              nixpkgs-release = nixpkgsRelease;
+              package =
+                packages.pythoneda-artifact-code-request-application-python313;
+              python = pkgs.python313;
+              pythoneda-shared-pythonlang-banner =
+                pythoneda-shared-pythonlang-banner.packages.${system}.pythoneda-shared-pythonlang-banner-python313;
+              pythoneda-shared-pythonlang-domain =
+                pythoneda-shared-pythonlang-domain.packages.${system}.pythoneda-shared-pythonlang-domain-python313;
+              inherit archRole layer org pkgs repo space;
+            };
         };
         packages = rec {
-          default = pythoneda-artifact-code-request-application-default;
-          pythoneda-artifact-code-request-application-default =
-            pythoneda-artifact-code-request-application-python312;
-          pythoneda-artifact-code-request-application-python38 =
-            pythoneda-artifact-code-request-application-for {
-              python = pkgs.python38;
-              pythoneda-artifact-code-request-infrastructure =
-                pythoneda-artifact-code-request-infrastructure.packages.${system}.pythoneda-artifact-code-request-infrastructure-python38;
-              pythoneda-shared-pythonlang-application =
-                pythoneda-shared-pythonlang-application.packages.${system}.pythoneda-shared-pythonlang-application-python38;
-              pythoneda-shared-pythonlang-banner =
-                pythoneda-shared-pythonlang-banner.packages.${system}.pythoneda-shared-pythonlang-banner-python38;
-              pythoneda-shared-pythonlang-domain =
-                pythoneda-shared-pythonlang-domain.packages.${system}.pythoneda-shared-pythonlang-domain-python38;
-            };
+          default = pythoneda-artifact-code-request-application-python312;
           pythoneda-artifact-code-request-application-python39 =
             pythoneda-artifact-code-request-application-for {
               python = pkgs.python39;
@@ -379,6 +361,18 @@
                 pythoneda-shared-pythonlang-banner.packages.${system}.pythoneda-shared-pythonlang-banner-python312;
               pythoneda-shared-pythonlang-domain =
                 pythoneda-shared-pythonlang-domain.packages.${system}.pythoneda-shared-pythonlang-domain-python312;
+            };
+          pythoneda-artifact-code-request-application-python313 =
+            pythoneda-artifact-code-request-application-for {
+              python = pkgs.python313;
+              pythoneda-artifact-code-request-infrastructure =
+                pythoneda-artifact-code-request-infrastructure.packages.${system}.pythoneda-artifact-code-request-infrastructure-python313;
+              pythoneda-shared-pythonlang-application =
+                pythoneda-shared-pythonlang-application.packages.${system}.pythoneda-shared-pythonlang-application-python313;
+              pythoneda-shared-pythonlang-banner =
+                pythoneda-shared-pythonlang-banner.packages.${system}.pythoneda-shared-pythonlang-banner-python313;
+              pythoneda-shared-pythonlang-domain =
+                pythoneda-shared-pythonlang-domain.packages.${system}.pythoneda-shared-pythonlang-domain-python313;
             };
         };
       });
