@@ -58,12 +58,12 @@
       let
         org = "pythoneda-artifact";
         repo = "code-request-application";
-        version = "0.0.8";
-        sha256 = "038n9wbyygnzwbyflmhay3n19ziwhj95wmvafnwn7vyn871ms74i";
+        version = "0.0.11";
+        sha256 = "0vxbs4gql3q1xp6p8j46ywrdd0ix0lnss2y0p8p8dffzzl92gy4z";
         pname = "${org}-${repo}";
         pythonpackage = "pythoneda.artifact.code_request.application";
         package = builtins.replaceStrings [ "." ] [ "/" ] pythonpackage;
-        entrypoint = "pythoneda_context";
+        entrypoint = "code_request_app";
         description = "Application layer for code requests";
         license = pkgs.lib.licenses.gpl3;
         homepage = "https://github.com/${org}/${repo}";
@@ -91,8 +91,8 @@
               "${pythonMajorVersion}.${builtins.elemAt pythonVersionParts 1}";
             wheelName =
               "${pnameWithUnderscores}-${version}-py${pythonMajorVersion}-none-any.whl";
-            banner_file = "${package}/pythoneda_context_banner.py";
-            banner_class = "PythonedaContextBanner";
+            banner_file = "${package}/code_request_banner.py";
+            banner_class = "CodeRequestBanner";
           in python.pkgs.buildPythonPackage rec {
             inherit pname version;
             projectDir = ./.;
@@ -170,8 +170,14 @@
             postPatch = ''
               substituteInPlace /build/$sourceRoot/entrypoint.sh \
                 --replace "@SOURCE@" "$out/bin/${entrypoint}.sh" \
+                --replace "@PYTHONEDA_EXTRA_NAMESPACES@" "" \
                 --replace "@PYTHONPATH@" "$PYTHONPATH" \
-                --replace "@ENTRYPOINT@" "$out/lib/python${pythonMajorMinorVersion}/site-packages/${package}/${entrypoint}.py"
+                --replace "@CUSTOM_CONTENT@" "" \
+                --replace "@PYTHONEDA_SHARED_PYTHONLANG_DOMAIN@" "${pythoneda-shared-pythonlang-domain}" \
+                --replace "@PACKAGE@" "$out/lib/python${pythonMajorMinorVersion}/site-packages" \
+                --replace "@ENTRYPOINT@" "$out/lib/python${pythonMajorMinorVersion}/site-packages/${package}/${entrypoint}.py" \
+                --replace "@PYTHON_ARGS@" "" \
+                --replace "@BANNER@" "$out/bin/banner.sh"
             '';
 
             postInstall = ''
@@ -186,6 +192,11 @@
               cp dist/${wheelName} $out/dist
               cp /build/$sourceRoot/entrypoint.sh $out/bin/${entrypoint}.sh
               chmod +x $out/bin/${entrypoint}.sh
+              command echo '#!/usr/bin/env sh' > $out/bin/banner.sh
+              command echo "export PYTHONPATH=$PYTHONPATH" >> $out/bin/banner.sh
+              command echo "command echo 'Running $out/bin/banner'" >> $out/bin/banner.sh
+              command echo "${python}/bin/python $out/lib/python${pythonMajorMinorVersion}/site-packages/${banner_file} \$@" >> $out/bin/banner.sh
+              command chmod +x $out/bin/banner.sh
             '';
 
             meta = with pkgs.lib; {
