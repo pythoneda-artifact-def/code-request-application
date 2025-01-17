@@ -159,16 +159,15 @@
             # pythonImportsCheck = [ pythonpackage ];
 
             unpackPhase = ''
-              cp -r ${src} .
-              sourceRoot=$(ls | grep -v env-vars)
-              chmod -R +w $sourceRoot
-              cp ${pyprojectToml} $sourceRoot/pyproject.toml
-              cp ${bannerTemplate} $sourceRoot/${banner_file}
-              cp ${entrypointTemplate} $sourceRoot/entrypoint.sh
+              command cp -r ${src}/* .
+              command chmod -R +w .
+              command cp ${pyprojectToml} ./pyproject.toml
+              command cp ${bannerTemplate} ./${banner_file}
+              command cp ${entrypointTemplate} ./entrypoint.sh
             '';
 
             postPatch = ''
-              substituteInPlace /build/$sourceRoot/entrypoint.sh \
+              substituteInPlace ./entrypoint.sh \
                 --replace "@SOURCE@" "$out/bin/${entrypoint}.sh" \
                 --replace "@PYTHONEDA_EXTRA_NAMESPACES@" "" \
                 --replace "@PYTHONPATH@" "$PYTHONPATH" \
@@ -181,17 +180,15 @@
             '';
 
             postInstall = ''
-              pushd /build/$sourceRoot
-              for f in $(find . -name '__init__.py'); do
+              for f in $(command find . -name '__init__.py'); do
                 if [[ ! -e $out/lib/python${pythonMajorMinorVersion}/site-packages/$f ]]; then
-                  cp $f $out/lib/python${pythonMajorMinorVersion}/site-packages/$f;
+                  command cp $f $out/lib/python${pythonMajorMinorVersion}/site-packages/$f;
                 fi
               done
-              popd
-              mkdir $out/dist $out/bin
-              cp dist/${wheelName} $out/dist
-              cp /build/$sourceRoot/entrypoint.sh $out/bin/${entrypoint}.sh
-              chmod +x $out/bin/${entrypoint}.sh
+              command mkdir $out/dist $out/bin
+              command cp dist/${wheelName} $out/dist
+              command cp ./entrypoint.sh $out/bin/${entrypoint}.sh
+              command chmod +x $out/bin/${entrypoint}.sh
               command echo '#!/usr/bin/env sh' > $out/bin/banner.sh
               command echo "export PYTHONPATH=$PYTHONPATH" >> $out/bin/banner.sh
               command echo "command echo 'Running $out/bin/banner'" >> $out/bin/banner.sh
